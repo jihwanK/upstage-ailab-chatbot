@@ -24,3 +24,11 @@ class Chatbot():
 
     def run(self):
         self.logger.info("[Chatbot] Chatbot system is running.")
+
+        user = input("Could you tell us your name please?\n")
+
+        while True:
+            query = input(f"[{user}] ")
+
+            if query.lower() in ['exit', 'finish']:
+                break
