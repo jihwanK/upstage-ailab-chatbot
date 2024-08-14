@@ -11,7 +11,7 @@ class Chatbot():
             pass
         elif self.member == 'pooh':
             pass
-        elif self.member == 'tiger':
+        elif self.member == 'tigger':
             pass
         elif self.member == 'piglet':
             pass
