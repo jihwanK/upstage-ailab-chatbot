@@ -35,6 +35,9 @@ class Logger:
     def info(self, message):
         self.logger.info(message)
 
+    def debug(self, message):
+        self.logger.error(message)
+
     def error(self, message):
         self.logger.error(message)
 
