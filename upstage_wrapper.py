@@ -1,14 +1,13 @@
 import os
 
 from langchain_upstage import ChatUpstage
+
 from llm_base import LLMBase
 from logger import Logger
 
 class UpstageWrapper(LLMBase):
     """Wrapper for Upstage Solar model"""
-
     def __init__(self, model_name="solar-1-mini-chat", temperature=0):
-        # Initialize the Upstage Solar API client
         self.llm = ChatUpstage(
             model_name=model_name,
             temperature=temperature,

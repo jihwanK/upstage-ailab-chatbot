@@ -7,75 +7,66 @@ from langchain.memory import ConversationBufferWindowMemory
 
 from logger import Logger
 from llm import LLM
+from vector_store import VectorStore
+import prompt
 
 class Chatbot():
     def __init__(self, member="all"):
         self.logger = Logger(os.getenv("LOG_LEVEL"))
-        self.member = member.lower()
 
-        if self.member == "all":
-            pass
-        elif self.member == "pooh":
-            pass
-        elif self.member == "tigger":
-            pass
-        elif self.member == "piglet":
-            pass
-        elif self.member == "eeyore":
-            pass
-        else:
-            pass
-
-        # =========================== #
-        # initialise the objects here #
-        # =========================== #
+        self.vector_store = VectorStore()
         self.llm = LLM().create_llm("openai")
-        # self.retriever = retriever
-        # self.prompt = prompt
-        # self.memory = ConversationBufferWindowMemory(
-        #     k=3,
-        #     ai_prefix=["Pooh", "Tigger", "Piglet", "Eeyore"]
-        # )
-
+        self.retriever = self.vector_store.get_retriever()
+        self.prompt = prompt.get_prompt()
+        self.memory = ConversationBufferWindowMemory(
+            k=20,
+            ai_prefix="Pooh and his friends",
+            human_prefix="User"
+        )
         self.logger.debug("[Chatbot] Chatbot system is initialised")
 
-    def __merge_docs(self, retrieved_docs):
+    def _merge_docs(self, retrieved_docs):
         self.logger.debug("[Chatbot] Merge documents")
         return "###\n\n".join([d.page_content for d in retrieved_docs])
 
-    def __chain(self):
+    def _chain(self):
         self.logger.debug("[Chatbot] Create chain")
-        holmes_chain_memory = RunnableParallel({
-            "context": self.retriever | self.__merge_docs,
+        chain_memory = RunnableParallel({
+            "context": self.retriever | self._merge_docs,
             "query": RunnablePassthrough(),
-            "history": RunnableLambda(self.memory.load_memory_variables) | itemgetter("history")
+            "history": RunnableLambda(self.memory.load_memory_variables) | itemgetter("history"),
+            # "name": RunnablePassthrough(),
         }) | {
             "answer": self.prompt | self.llm | StrOutputParser(),
             "context": itemgetter("context"),
             "prompt": self.prompt
         }
-        return holmes_chain_memory
+        return chain_memory
 
-    def __chat(self, query):
+    def _chat(self, query, user_name):
         self.logger.debug("[Chatbot] Start chat")
-        holmes_chain_memory = self.__chain()
-        self.logger.debug("[Chatbot] Successfully chained")
-        result = holmes_chain_memory.invoke(query)
+        chain_memory = self._chain()
+        self.logger.debug("[Chatbot] Successfully generated chain")
+        # result = chain_memory.invoke({"query": query, "name": user_name})
+        result = chain_memory.invoke(query)
         self.logger.debug("[Chatbot] Successfully invoked chat")
         self.memory.save_context({"query": query}, {"answer": result["answer"]})
         self.logger.debug("[Chatbot] Saved the chat history")
-
-        print(result["prompt"].messages[0].content.split("###")[-1] + result["answer"])
+        
+        print(result["answer"])
+        # print(result["prompt"].messages[0].content.split("###")[-1] + result["answer"])
+        # print(result["answer"])
 
     def run(self):
         self.logger.debug("[Chatbot] Chatbot system is running")
 
-        user = input("Could you tell us your name please?\n")
+        user_name = input("Could you tell us your name please?\n")
 
         while True:
-            query = input(f"[{user}] ")
+            query = input(f"[{user_name}] ")
 
             if query.lower() in ["exit", "finish", "quit"]:
+                print("Thank you for chatting. Goodbye!")
                 break
 
-            # self.__chat(query)
+            self._chat(query, user_name)
