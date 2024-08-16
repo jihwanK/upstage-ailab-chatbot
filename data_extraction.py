@@ -90,7 +90,7 @@ def get_template():
 
     schema = Object(
         id="script",
-        description="Extract dialogue from given piece of the novel 'Winnie-the-pooh', ignore the non-dialogue parts. When analyzing the document, make the most of your knowledge about the Sherlock Holmes novels you know. When the speaker is not clear, infer from the character's personality, occupation, and way of speaking.",
+        description="Extract dialogue from given piece of the novel 'Winnie-the-pooh', ignore the non-dialogue parts. When analyzing the document, make the most of your knowledge about the 'Winnie-the-Pooh' novels you know. When the speaker is not clear, infer from the character's personality, occupation, and way of speaking.",
         attributes=[
             Text(
                 id="role",
