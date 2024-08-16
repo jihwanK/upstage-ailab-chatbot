@@ -10,7 +10,7 @@ def main():
     logger.debug("[main] Start")
 
     # chatbot = Chatbot(logger, "pooh")
-    chatbot = Chatbot()
+    chatbot = Chatbot(llm_platform="openai")
     chatbot.run()
 
 
