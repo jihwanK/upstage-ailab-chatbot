@@ -11,11 +11,11 @@ from vector_store import VectorStore
 import prompt
 
 class Chatbot():
-    def __init__(self, member="all"):
+    def __init__(self, llm_platform="openai"):
         self.logger = Logger(os.getenv("LOG_LEVEL"))
 
         self.vector_store = VectorStore()
-        self.llm = LLM().create_llm("openai")
+        self.llm = LLM().create_llm(llm_platform)
         self.retriever = self.vector_store.get_retriever()
         self.prompt = prompt.get_prompt()
         self.memory = ConversationBufferWindowMemory(
