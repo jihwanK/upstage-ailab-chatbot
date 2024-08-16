@@ -3,7 +3,7 @@ import os
 from operator import itemgetter
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough, RunnableLambda
 from langchain_core.output_parsers import StrOutputParser
-from langchain.memory import ConversationBufferWindowMemory
+from langchain.memory import ConversationBufferMemory
 
 from logger import Logger
 from llm import LLM
@@ -18,8 +18,7 @@ class Chatbot():
         self.llm = LLM().create_llm(llm_platform)
         self.retriever = self.vector_store.get_retriever()
         self.prompt = prompt.get_prompt()
-        self.memory = ConversationBufferWindowMemory(
-            k=20,
+        self.memory = ConversationBufferMemory(
             ai_prefix="Pooh and his friends",
             human_prefix="User"
         )
