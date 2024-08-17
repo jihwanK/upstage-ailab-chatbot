@@ -26,20 +26,19 @@ class Chatbot():
         self.logger.debug("[Chatbot] Chatbot system is initialised")
 
     def _merge_docs(self, retrieved_docs):
-        self.logger.debug("[Chatbot] Merge documents")
+        self.logger.debug(f"[Chatbot] Merge documents: Retrieved docs: {retrieved_docs}")
         return "###\n\n".join([d.page_content for d in retrieved_docs])
 
     def _chain(self):
         self.logger.debug("[Chatbot] Create chain")
         chain_memory = RunnableParallel({
-            "context": self.retriever | self._merge_docs,
-            "query": RunnablePassthrough(),
+            "context": itemgetter("query") | self.retriever | self._merge_docs,
+            "query": itemgetter("query") | RunnablePassthrough(),
             "history": RunnableLambda(self.memory.load_memory_variables) | itemgetter("history"),
-            # "name": RunnablePassthrough(),
+            "name": itemgetter("name") | RunnablePassthrough(),
         }) | {
+            "prompt": self.prompt,
             "answer": self.prompt | self.llm | StrOutputParser(),
-            "context": itemgetter("context"),
-            "prompt": self.prompt
         }
         return chain_memory
 
@@ -47,15 +46,15 @@ class Chatbot():
         self.logger.debug("[Chatbot] Start chat")
         chain_memory = self._chain()
         self.logger.debug("[Chatbot] Successfully generated chain")
-        # result = chain_memory.invoke({"query": query, "name": user_name})
-        result = chain_memory.invoke(query)
+        self.logger.debug(f"[Chatbot] chain generated === \n{chain_memory}")
+        result = chain_memory.invoke({"query": query, "name": user_name})
+        # result = chain_memory.invoke(query)
+        self.logger.debug(f"[Chatbot] chain invoked === \n{result}")
         self.logger.debug("[Chatbot] Successfully invoked chat")
-        self.memory.save_context({"query": query}, {"answer": result["answer"]})
+        self.memory.save_context({"query": query}, {"answer": result["answer"].strip()})
         self.logger.debug("[Chatbot] Saved the chat history")
-        
-        print(result["answer"])
-        # print(result["prompt"].messages[0].content.split("###")[-1] + result["answer"])
-        # print(result["answer"])
+
+        print(result["answer"].strip())
 
     def run(self):
         self.logger.debug("[Chatbot] Chatbot system is running")
@@ -63,7 +62,7 @@ class Chatbot():
         user_name = input("Could you tell us your name please?\n")
 
         while True:
-            query = input(f"[{user_name}] ")
+            query = input(f"\n[{user_name}] ")
 
             if query.lower() in ["exit", "finish", "quit"]:
                 print("Thank you for chatting. Goodbye!")
