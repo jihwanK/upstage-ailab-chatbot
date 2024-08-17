@@ -13,7 +13,7 @@ class GeminiWrapper(LLMBase):
             temperature=temperature,
         )
         self.logger = Logger(os.getenv("LOG_LEVEL"))
-        self.logger.debug("[GeminiWrapper] Gemini LLM instance is initialised")
+        self.logger.debug(f"[GeminiWrapper] Gemini LLM instance [{model_name}] is initialised")
 
     def get_llm(self):
         """Return the Google Gemini LLM instance"""
