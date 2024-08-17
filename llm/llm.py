@@ -1,6 +1,6 @@
-from openai_wrapper import OpenAIWrapper
-from upstage_wrapper import UpstageWrapper
-from gemini_wrapper import GeminiWrapper
+from .openai_wrapper import OpenAIWrapper
+from .upstage_wrapper import UpstageWrapper
+from .gemini_wrapper import GeminiWrapper
 
 class LLM:
     """Factory to create instances of different language models."""

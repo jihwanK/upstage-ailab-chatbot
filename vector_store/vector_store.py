@@ -4,7 +4,7 @@ from langchain.docstore.document import Document
 from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 
-from logger import Logger
+from utils.logger import Logger
 
 class VectorStore:
     def __init__(self, script_path="./artefact/pooh_script.txt", index_path="./artefact/pooh_faiss"):

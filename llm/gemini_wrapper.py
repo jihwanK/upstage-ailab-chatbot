@@ -2,8 +2,8 @@ import os
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from llm_base import LLMBase
-from logger import Logger
+from .llm_base import LLMBase
+from utils.logger import Logger
 
 class GeminiWrapper(LLMBase):
     """Wrapper for Google's Gemini model"""

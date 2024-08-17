@@ -2,8 +2,8 @@ import os
 
 from langchain_openai import ChatOpenAI
 
-from llm_base import LLMBase
-from logger import Logger
+from .llm_base import LLMBase
+from utils.logger import Logger
 
 class OpenAIWrapper(LLMBase):
     """Wrapper for OpenAI's GPT models"""

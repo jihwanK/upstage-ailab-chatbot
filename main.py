@@ -2,8 +2,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
-from logger import Logger
-from chatbot import Chatbot
+from utils.logger import Logger
+from chatbot.chatbot import Chatbot
 
 def main():
     logger = Logger(os.getenv("LOG_LEVEL"))
