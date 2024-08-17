@@ -48,21 +48,23 @@ class Chatbot():
         self.logger.debug("[Chatbot] Successfully generated chain")
         self.logger.debug(f"[Chatbot] chain generated === \n{chain_memory}")
         result = chain_memory.invoke({"query": query, "name": user_name})
-        # result = chain_memory.invoke(query)
         self.logger.debug(f"[Chatbot] chain invoked === \n{result}")
         self.logger.debug("[Chatbot] Successfully invoked chat")
         self.memory.save_context({"query": query}, {"answer": result["answer"].strip()})
+        self.logger.debug(f"[Chatbot] Prompt token size: {len("\n".join([message.content for message in result["prompt"].messages]).split(" "))}")
         self.logger.debug("[Chatbot] Saved the chat history")
 
-        print(result["answer"].strip())
+        print('\n'.join(map(str.strip, result["answer"].split('\n'))))
 
     def run(self):
         self.logger.debug("[Chatbot] Chatbot system is running")
 
         user_name = input("Could you tell us your name please?\n")
 
+        num_conversation = 1
         while True:
-            query = input(f"\n[{user_name}] ")
+            query = input(f"\n({num_conversation})\n{user_name}: ")
+            num_conversation += 1
 
             if query.lower() in ["exit", "finish", "quit"]:
                 print("Thank you for chatting. Goodbye!")
