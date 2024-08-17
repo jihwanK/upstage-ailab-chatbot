@@ -13,7 +13,7 @@ class UpstageWrapper(LLMBase):
             temperature=temperature,
         )
         self.logger = Logger(os.getenv("LOG_LEVEL"))
-        self.logger.debug("[UpstageWrapper] Upstage LLM instance is initialised")
+        self.logger.debug(f"[UpstageWrapper] Upstage LLM instance [{model_name}] is initialised")
 
     def get_llm(self):
         """Return the Upstage Solar LLM instance"""
