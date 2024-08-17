@@ -9,10 +9,8 @@ def main():
     logger = Logger(os.getenv("LOG_LEVEL"))
     logger.debug("[main] Start")
 
-    # chatbot = Chatbot(logger, "pooh")
     chatbot = Chatbot(llm_platform="openai")
     chatbot.run()
-
 
 if __name__ == "__main__":
     main()
