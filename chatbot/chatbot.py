@@ -57,6 +57,9 @@ class Chatbot():
         self.logger.debug("\n".join(map(str.strip, result["answer"].split("\n"))))
         return "\n\n".join(map(str.strip, result["answer"].split("\n")))
 
+    def run_front(self, query, user_name):
+        return self._chat(query, user_name)
+    
     def run(self):
         self.logger.debug("[Chatbot] Chatbot system is running")
 
