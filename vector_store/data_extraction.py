@@ -1,7 +1,7 @@
 import time
 
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(override=True)
 
 import argparse
 import math
@@ -109,9 +109,8 @@ def get_template():
 
     return schema
 
-
 def main(num_process):
-    loader = DirectoryLoader('./dataset', glob="*", show_progress=True)
+    loader = DirectoryLoader('../dataset', glob="*", show_progress=True)
     docs = loader.load()
 
     text_splitter = CharacterTextSplitter(
@@ -135,7 +134,7 @@ def main(num_process):
     result = pool.starmap(extract_scripts, inputs)
     result = sum(result, [])
 
-    with open("./artefact/pooh_script.txt", "w") as f:
+    with open("../artefact/pooh_script.txt", "w") as f:
         f.write("###\n".join(result))
 
     pool.close()

@@ -2,8 +2,8 @@ import os
 
 from langchain_upstage import ChatUpstage
 
-from llm_base import LLMBase
-from logger import Logger
+from .llm_base import LLMBase
+from utils.logger import Logger
 
 class UpstageWrapper(LLMBase):
     """Wrapper for Upstage Solar model"""

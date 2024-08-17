@@ -5,10 +5,10 @@ from langchain_core.runnables import RunnableParallel, RunnablePassthrough, Runn
 from langchain_core.output_parsers import StrOutputParser
 from langchain.memory import ConversationBufferWindowMemory
 
-from logger import Logger
-from llm import LLM
-from vector_store import VectorStore
-import prompt
+from utils.logger import Logger
+from llm.llm import LLM
+from vector_store.vector_store import VectorStore
+from . import prompt
 
 class Chatbot():
     def __init__(self, llm_platform="openai"):
