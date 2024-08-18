@@ -20,7 +20,7 @@
 
 <div align="center">
 
-| **팀장** | **팀원 1** | **팀원 2** | **팀원 3** | **팀원 4** |
+| **김지환** | **김서현** | **최정은** | **김민수** | **박주연** |
 | :------: |  :------: | :------: | :------: | :------: |
 |[<img src="https://avatars.githubusercontent.com/u/17960812?v=4" height=150 width=150> <br/> @jihwanK](https://github.com/jihwanK) |[<img src="https://avatars.githubusercontent.com/u/177704202?v=4" height=150 width=150> <br/> @tjgusKim](https://github.com/tjgusKim) |[<img src="https://avatars.githubusercontent.com/u/177805026?v=4" height=150 width=150> <br/> @Insight7321](https://github.com/Insight7321) |[<img src="https://avatars.githubusercontent.com/u/175805884?v=4" height=150 width=150> <br/> @GoldDuck0108](https://github.com/GoldDuck0108) |[<img src="https://avatars.githubusercontent.com/u/40532035?v=4" height=150 width=150> <br/> @pbcs0321](https://github.com/pbcs0321) |
 </div>
