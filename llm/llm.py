@@ -1,6 +1,7 @@
 from .openai_wrapper import OpenAIWrapper
 from .upstage_wrapper import UpstageWrapper
 from .gemini_wrapper import GeminiWrapper
+from .anthropic_wrapper import AnthropicWrapper
 
 class LLM:
     """Factory to create instances of different language models."""
@@ -13,5 +14,7 @@ class LLM:
             return UpstageWrapper(**kwargs).get_llm()
         elif platform.lower() == "gemini" or platform.lower() == "google":
             return GeminiWrapper(**kwargs).get_llm()
+        elif platform.lower() == "claude" or platform.lower() == "anthropic":
+            return AnthropicWrapper(**kwargs).get_llm()
         else:
             raise ValueError(f"Unsupported platform: {platform}")
