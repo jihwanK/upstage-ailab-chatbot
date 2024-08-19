@@ -1,19 +1,18 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/yoHXt_g5)
 # 프로젝트 이름
 
-푸와 친구들의 고민상담  
-
-<br>
+**푸와 친구들의 고민상담**
 
 ## 프로젝트 소개
-<예시 1>
-- 이 프로젝트는 증권 배당 데이터와 관련된 정보를 효율적으로 관리하고, 관련 세법에 대한 질문과 답변을 제공하는 QA(Question-Answering) 엔진을 구축하는 것입니다.
-- 사용자는 이 엔진을 통해 특정 기업의 배당 정보나 세법 관련 질문에 대한 답변을 신속하게 얻을 수 있습니다.
-<br>
+이 프로젝트는 곰돌이 푸우의 긍정적이고 따뜻한 페르소나를 활용한 상담용 챗봇을 개발하는 것을 목표로 합니다. 소설 속 푸와 친구들의 밝은 성격을 통해 사용자에게 긍정적인 에너지를 전달하고, 고민 속에서도 마음의 평화를 찾도록 돕고자 합니다.
 
-<예시 2>
-- 이 프로젝트는 유명 인물인 유재석의 페르소나를 바탕으로 한 Chatbot을 개발하는 것입니다.
-- 이 Chatbot은 유재석의 말투, 스타일 등 유재석이 나온 프로그램 텍스트 대화를 반영하여 사용자와 자연스러운 대화를 나누도록 설계됩니다. 
+### 목표
+- LLM을 활용하여 대화의 자연스러움과 깊이를 확보합니다. 
+- Langchain을 통해 대화의 흐름을 효과적으로 관리하고 확장합니다. 
+- RAG를 사용하여 관련 정보를 정확하게 검색하고 제공합니다. 
+- Prompt 기능을 통해 다양한 사용자 요구에 맞는 답변을 생성합니다. 
+- Streamlit Front를 사용해 사용자 친화적인 인터페이스를 구현합니다.
+
 <br>
 
 ## 팀원 구성
@@ -30,82 +29,136 @@
 ## 1. 개발 환경
 
 - 주 언어 : Python
-- 버전 및 이슈관리 : Git
+- 버전 및 이슈관리 : Git, [GitHub(@jihwanK/chatbot)](https://github.com/jihwanK/chatbot)
 - 협업 툴 : Slack, Notion
 
 <br>
 
 ## 2. 채택한 개발 기술과 브랜치 전략
-<예시>
 
-### Pandas, NumPy
+### LangChain
 
-- Pandas
-  - 기업의 배당 데이터를 Pandas DataFrame으로 불러온 후, 각 기업의 배당 수익률을 계산하고, 연도별로 그룹화하여 평균 배당 수익률을 계산합니다.
-  - 필터링 조건을 적용하여 특정 기업의 배당 데이터를 분석하거나, 원하는 형태로 데이터를 변형할 수 있습니다.  
+#### LangChain 컴포넌트
+* `LLM`: OpenAI 등의 대규모 언어 모델을 래핑하여 사용합니다.
+* `VectorStore`: FAISS를 사용하여 벡터 데이터베이스를 구현합니다.
+* `Embeddings`: OpenAI의 임베딩 모델을 사용하여 텍스트를 벡터로 변환합니다.
+* `ConversationBufferWindowMemory`: 대화 기록을 저장하고 관리합니다.
+* `RunnableParallel`, `RunnablePassthrough`, `RunnableLambda`: 복잡한 체인 로직을 구성하는 데 사용됩니다.
 
-- Numpy
-  - 벡터화 연산을 사용하여, 3000여개 데이터를 효율적으로 처리합니다.
+#### 체인 구성
+* `_chain` 메서드에서 여러 LangChain 컴포넌트를 조합하여 복잡한 대화 처리 파이프라인을 구성합니다.
+* 컨텍스트 검색, 쿼리 처리, 대화 기록 관리 등의 작업을 연결합니다.
 
-### Beautifulsoup, Selenium
+### RAG (Retrieval-Augmented Generation)
 
-- Beautifulsoup
-  - 네이버 증권 페이지에서 배당률, 주가 등의 정보를 포함한 HTML 테이블에서 데이터를 추출합니다.
+#### 벡터 저장소 구현
+* `VectorStore` 클래스에서 FAISS를 사용하여 문서의 벡터 표현을 저장하고 검색합니다.
+* 스크립트 파일에서 텍스트를 로드하고, 이를 벡터화하여 저장합니다.
 
-- Selenium
-  - 웹 페이지에서 동적 콘텐츠를 로드합니다.
-  - 특정 종목의 배당 데이터를 얻기 위해 종목 검색 후, 관련 페이지로 이동해야 할 때, 이 과정을 자동화합니다. 
+#### 검색 기능
+* `get_retriever` 메서드를 통해 MMR(Maximum Marginal Relevance) 검색 방식을 사용하는 검색기를 생성합니다.
+* 사용자 쿼리와 관련된 가장 연관성 높은 문서를 검색합니다.
+
+#### 검색 결과 활용
+* `_merge_docs` 메서드에서 검색된 문서들을 하나의 컨텍스트로 병합합니다.
+* 이 컨텍스트는 LLM에 입력되어 보다 정확하고 관련성 높은 응답을 생성하는 데 사용됩니다.
+
+#### 대화 처리
+* `_chat` 메서드에서 사용자 쿼리, 검색된 컨텍스트, 대화 기록을 결합하여 LLM에 전달합니다.
+* LLM은 이 정보를 바탕으로 응답을 생성하며, 이는 RAG의 핵심 아이디어를 구현한 것입니다.
 
 ### 브랜치전략 
     
 - 브랜치 전략
-  - Git-flow 전략을 기반으로 main, develop 브랜치와 feature 보조 브랜치를 운용했습니다.
-  - main, develop, Feat 브랜치로 나누어 개발을 하였습니다.
+  - Git-flow 전략을 기반으로 main, dev 브랜치와 feature 보조 브랜치를 운용했습니다.
+  - main, dev, feauter/X 브랜치로 나누어 개발을 하였습니다.
     - **main** 브랜치는 배포 단계에서만 사용하는 브랜치입니다.
-    - **develop** 브랜치는 개발 단계에서 git-flow의 master 역할을 하는 브랜치입니다.
-    - **Feat** 브랜치는 기능 단위로 독립적인 개발 환경을 위하여 사용하고 merge 후 각 브랜치를 삭제해주었습니다.
+    - **dev** 브랜치는 개발 단계에서 git-flow의 master 역할을 하는 브랜치입니다.
+    - **feature/X** 브랜치는 기능 단위로 독립적인 개발 환경을 위하여 사용하고 merge 후 각 브랜치를 삭제해주었습니다.
 
 
 <br>
 
 ## 3. 프로젝트 구조
 ```
+.
 ├── README.md
-├── .gitignore
-└── src
-     ├── App.py
-     ├── index.py
-     ├── api
-     │     └── GoogleAPI.jsx
-     └── styles
-           └── Globalstyled.jsx
-...
-
+├── __init__.py
+├── chatbot.log
+├── front.py
+├── main.py
+├── requirements.txt
+├── setup.sh
+├── archive
+│   ├── PracticeChatHistory.py
+│   ├── PracticeRetriever.py
+│   ├── db_extract.py
+│   ├── faiss_index.index
+│   ├── faiss_vector_checker.py
+│   ├── faiss_vector_store.py
+│   └── pooh_script.json
+├── artefact
+│   ├── pooh_script.txt
+│   └── pooh_faiss
+│       ├── index.faiss
+│       └── index.pkl
+├── chatbot
+│   ├── __init__.py
+│   ├── chatbot.py
+│   └── prompt.py
+├── dataset
+│   ├── pooh.txt
+│   └── pooh2.txt
+├── llm
+│   ├── __init__.py
+│   ├── anthropic_wrapper.py
+│   ├── gemini_wrapper.py
+│   ├── llm.py
+│   ├── llm_base.py
+│   ├── openai_wrapper.py
+│   └── upstage_wrapper.py
+├── utils
+│   ├── __init__.py
+│   └── logger.py
+└── vector_store
+    ├── __init__.py
+    ├── data_extraction.py
+    └── vector_store.py
 ```
 
 <br>
 
 ## 4. 역할 분담
 
-### 팀원 1
-- **역할**
-    - 프로젝트를 진행하며 맡은 역할 작성
-- **기능**
-    - 프로젝트를 진행하며 개발한 기능 작성
-<br>
+### 김지환
 
-### 팀원 2
-- **역할**
-    - 프로젝트를 진행하며 맡은 역할 작성
-- **기능**
-    - 프로젝트를 진행하며 개발한 기능 작성
-<br>
+- 팀장; 전반적인 프로젝트 관리
+- 프로젝트 설계 및 프롬프트 구현
+- 전체 코드 병합 및 리팩토링
 
-### 팀원 3
-- **역할**
-    - 프로젝트를 진행하며 맡은 역할 작성
-- **기능**
-    - 프로젝트를 진행하며 개발한 기능 작성
+### 김서현
+
+- Chat memory와 Chain 구현
+- 데모 페이지 구현 (streamlit 활용)
+    
+### 최정은
+
+- 챗봇 시나리오 구상
+- Raw Data 수집
+- 데이터 가공
+- Vector Store 구현
+    
+### 김민수
+
+- 주제 선정에 관한 고민
+- 챗봇 프롬프트 작성
+
+
+### 박주연
+
+- LLM 모듈 구현
+- 발표 시나리오 구상
+
 <br>
 
 ## 5. 개발 기간 및 작업 관리
@@ -118,8 +171,7 @@
 <br>
 
 ### 작업 관리
-<예시>
-
+#### Error handling
 - 아래와 같은 오류가 발생했습니다.
 
 ```python
@@ -140,16 +192,19 @@ TypeError: FAISS.__init__() got an unexpected keyword argument 'allow_dangerous_
 ```
 
 
-
 <br>
 
 ## 5. 프로젝트 후기
 
-### 팀원 1
-프로젝트 후기 작성
+### 프로젝트 후기 작성
+- RAG/LangChain 등 생소한 개념이 헷갈리고 정리가 안되는 상황에서 프로젝트 진행했지만 모르는 개념에 대해 관련 튜토리얼 영상 시청 및 팀원들과의 대화를 통해 해결하는 기회를 가짐
+- 모듈별 파이썬 코드 내용 이해 및 구현이 어려웠고, 깃헙이라는 협업툴 사용 적응이 필요했지만 프로젝트를 통해 깃헙에 익숙해지고 코딩 협업하는 좋은 경험을 쌓음
+- 모듈화와 객체 지향 프로그래밍을 통해, 각 기능을 독립적인 클래스로 분리함으로써 시스템의 복잡성을 체계적으로 줄이고 유지보수를 용이하게 할 수 있었음
+- 개념들로만 알고 있던 것들을 이용하여 실제로 구현해보고 완성을 해볼 수 있어서 좋은 경험이었음
 
-### 팀원 2
-프로젝트 후기 작성
+
+
+
 <br>
 
 
