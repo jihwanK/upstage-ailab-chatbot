@@ -1,14 +1,13 @@
 import time
+import argparse
+import math
+import multiprocessing
 
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
-import argparse
-import math
-import multiprocessing
 from tqdm import tqdm
 
-import openai
 from kor.extraction import create_extraction_chain
 from kor.nodes import Object, Text
 from langchain_openai import ChatOpenAI
@@ -40,8 +39,8 @@ def extract_scripts(documents, schema):
         try:
             doc = documents[idx]
             script = kor_chain.invoke(doc.page_content)
-            script_parsed, holmes_inc = parse_kor_result(script)
-            if holmes_inc:
+            script_parsed, pooh_inc = parse_kor_result(script)
+            if pooh_inc:
                 doc_script.append(script_parsed)
             idx += 1
             pbar.update(1)
