@@ -29,9 +29,9 @@
 
 ## 1. 개발 환경
 
-- 주 언어 : 
-- 버전 및 이슈관리 : 
-- 협업 툴 :
+- 주 언어 : Python
+- 버전 및 이슈관리 : Git
+- 협업 툴 : Slack, Notion
 
 <br>
 
@@ -123,28 +123,22 @@
 - 아래와 같은 오류가 발생했습니다.
 
 ```python
-C:\Users\yong\AppData\Local\Programs\Python\Python311\Lib\site-packages\langchain_core\_api\deprecation.py:117: LangChainDeprecationWarning: The class `langchain_community.llms.openai.OpenAI` was deprecated in langchain-community 0.0.10 and will be removed in 0.2.0. An updated version of the class exists in the langchain-openai package and should be used instead. To use it run `pip install -U langchain-openai` and import as `from langchain_openai import OpenAI`.
-  warn_deprecated(
+TypeError: FAISS.__init__() got an unexpected keyword argument 'allow_dangerous_deserialization'
 ```
 
 ### 설명
 
-- langchain_community.llms.openai.OpenAI는 langchain-community 0.0.10에서 deprecate되었으며 0.2.0에서 제거될 예정입니다.
-- 업데이트된 버전의 클래스가 langchain-openai 패키지에 있으며 이것을 사용해야 합니다.
+- langchain v0.1.0에서는 실행되지 않습니다
 
 
 ### 해결
 
-- 명령 프롬프트(또는 터미널)에서 다음 명령을 실행해 langchain-openai 패키지를 설치합니다.
+- 명령 프롬프트(또는 터미널)에서 다음 명령을 실행해 langchain을 최신버전으로 업그레이드합니다.
 
 ```python
-pip install -U langchain-openai
+ pip install --upgrade langchain
 ```
 
-- 아래와 같이 import문 변경하면 해결됩니다.
-```python
-from langchain_openai import OpenAI
-```
 
 
 <br>
