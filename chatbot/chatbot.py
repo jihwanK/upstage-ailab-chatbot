@@ -33,10 +33,10 @@ class Chatbot():
     def _chain(self):
         self.logger.debug("[Chatbot] Create chain")
         chain_memory = RunnableParallel({
-            "context": itemgetter("query") | self.retriever | self._merge_docs,
-            "query": itemgetter("query") | RunnablePassthrough(),
+            "context": self.retriever | self._merge_docs,
+            "query": RunnablePassthrough(),
             "history": RunnableLambda(self.memory.load_memory_variables) | itemgetter("history"),
-            "name": itemgetter("name") | RunnablePassthrough(),
+            "name": RunnablePassthrough(),
         }) | {
             "prompt": self.prompt,
             "answer": self.prompt | self.llm | StrOutputParser(),
