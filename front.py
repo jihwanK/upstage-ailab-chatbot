@@ -6,9 +6,9 @@ load_dotenv(override=True)
 import streamlit as st
 from chatbot.chatbot import Chatbot
 
-chatbot = Chatbot(llm_platform="openai")
-
 def init_session_state():
+    if 'chatbot' not in st.session_state:
+        st.session_state.chatbot = Chatbot(llm_platform="openai")
     if 'username' not in st.session_state:
         st.session_state.username = None
     if 'conversation' not in st.session_state:
@@ -21,14 +21,13 @@ def main():
 
     init_session_state()
 
-    if st.session_state.username is None or st.session_state.username.strip() == "":
+    if not st.session_state.username:
         username_input = st.text_input("이름을 입력해 주세요")
         if username_input:
             st.session_state.username = username_input.strip()
-            # st.experimental_rerun()
             st.rerun()
 
-    if st.session_state.username and st.session_state.username.strip() != "":
+    else:
         messages = st.container()
 
         # Display conversation messages
@@ -40,7 +39,7 @@ def main():
         prompt = st.chat_input("메시지를 입력해 주세요")
         if prompt:
             try:
-                response = chatbot._chat(prompt, st.session_state.username)
+                response = st.session_state.chatbot._chat(prompt, st.session_state.username)
                 st.session_state.conversation.append({"user": prompt, "bot": response})
                 # st.experimental_rerun()  # Rerun the app to update the conversation display
                 st.rerun()  # Rerun the app to update the conversation display
