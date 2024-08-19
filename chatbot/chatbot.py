@@ -1,4 +1,5 @@
 import os
+import re
 
 from operator import itemgetter
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough, RunnableLambda
@@ -54,8 +55,9 @@ class Chatbot():
         self.logger.debug(f"[Chatbot] Prompt token size: {len("\n".join([message.content for message in result["prompt"].messages]).split(" "))}")
         self.logger.debug("[Chatbot] Saved the chat history")
 
-        self.logger.debug("\n".join(map(str.strip, result["answer"].split("\n"))))
-        return "\n\n".join(map(str.strip, result["answer"].split("\n")))
+        self.logger.debug("\n".join(map(str.strip, re.sub(r"\n+", "\n", result["answer"]).split("\n"))))
+        print("\n".join(map(str.strip, re.sub(r"\n+", "\n", result["answer"]).split("\n"))))
+        return "\n\n".join(map(str.strip, re.sub(r"\n+", "\n", result["answer"]).split("\n")))
 
     def run_front(self, query, user_name):
         return self._chat(query, user_name)
